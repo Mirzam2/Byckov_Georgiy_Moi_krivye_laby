@@ -3,7 +3,7 @@ from random import randint
 
 turtle.speed(10)
 
-n = 100   # кол-о черепах
+n = 50   # кол-о черепах
 t = 100   # кол-о иттераций
 xb = 200  # границы
 yb = 200
