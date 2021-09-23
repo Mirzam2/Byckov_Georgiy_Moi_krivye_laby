@@ -3,13 +3,12 @@ from random import randint
 
 turtle.speed(10)
 
-n = 100   # колво черепах
-t = 100
+n = 100   # кол-о черепах
+t = 100   # кол-о иттераций
 xb = 200  # границы
 yb = 200
 vmax = 10
 
-pool = [turtle.Turtle() for i in range(n)]
 sp = list()
 turtle.penup()
 turtle.goto(xb, yb)
@@ -19,11 +18,16 @@ turtle.goto(-xb, -yb)
 turtle.goto(xb, -yb)
 turtle.goto(xb, yb)
 turtle.hideturtle()
+
+'''Генерация положения и скоростей частиц газа'''
+pool = [turtle.Turtle() for i in range(n)]
 for unit in pool:
     unit.shape('circle')
     unit.penup()
     unit.goto(randint(-xb, xb), randint(-yb, yb))
     sp.append([randint(-100, 100) / vmax, randint(-100, 100) / vmax])
+
+'''Само моделирование'''
 for _ in range(t):
     i = 0
     for unit in pool:
