@@ -9,6 +9,7 @@ xb = 300  # границы
 yb = 300
 vmax = 10
 
+'''Рисование границ'''
 sp = list()
 turtle.penup()
 turtle.goto(xb, yb)
