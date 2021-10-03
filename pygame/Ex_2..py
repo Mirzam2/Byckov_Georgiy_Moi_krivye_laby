@@ -1,6 +1,7 @@
 from turtle import color, fillcolor, width
 import pygame
 from pygame import Color, transform
+from pygame import surface
 from pygame.draw import *
 import math
 from math import pi
@@ -112,7 +113,30 @@ def boss(x0, y0, otr, n):
     screen.blit(sur, (x0, y0))
 
 
-boss(400, 400, True, 400)
+def fish(x0, y0, a, l):
+    k = 220 / l
+    sfish = pygame.Surface((220, 115))
+    polygon(sfish, (102, 99, 112), ((160, 60),
+            (171, 58), (196, 73), (168, 88)), width=0)
+    arc(sfish, (71, 136, 147), (65, 33, 148, 50), 0.4, 2.74, 30)
+    arc(sfish, (71, 136, 147), (65, 13, 148, 50), 3.44, 6, 30)
+    polygon(sfish, (71, 136, 147), ((67, 45),
+            (14, 80), (4, 35)), width=0)  # хвост рыбы
+    polygon(sfish, (102, 99, 112), ((135, 33), (94, 0), (164, 15),
+            (172, 24), (171, 35)), width=0)  # верхний плавник
+    polygon(sfish, (102, 99, 112), ((97, 59),
+            (80, 79), (112, 84), (114, 62)), width=0)  # нижний плавник
+    circle(sfish, (2, 57, 147), (170, 47), 7, width=0)  # глаз
+    circle(sfish, (5, 64, 85), (170, 47), 5, width=0)
+
+    sfish = transform.rotate(sfish, a)
+    sfish = transform.rotozoom(sfish, 0, k)
+    sfish.set_colorkey((0, 0, 0))
+    screen.blit(sfish, (x0, y0))
+
+
+fish(500, 700, 0, 220)
+boss(0, 350, False, 586)
 big = (250, 40)
 for x0, y0, ang in [(100, 10, 7), (388, 192, 0), (130, 280, -20)]:
     chaika(x0, y0, ang, big[0], big[1])
