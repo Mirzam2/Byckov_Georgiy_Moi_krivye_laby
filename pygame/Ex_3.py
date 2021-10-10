@@ -1,4 +1,3 @@
-from turtle import color, fillcolor, width
 import pygame
 from pygame import image
 import random
@@ -154,7 +153,7 @@ small = (50, 20)
 for x0, y0, ang in [(400, 50, 10), (450, 20, -10), (400, 100, -20), (400, 150, 20), (randint(100, 500), randint(100, 500), randint(-45, 45))]:
     chaika(x0, y0, ang, small[0], small[1])
 for i in range(15):
-    chaika(randint(200, 400), randint(200, 400), randint(-30, 30), 60, 20)
+    chaika(randint(0, 800), randint(0, 400), randint(-30, 30), 60, 20)
 
 
 pygame.display.update()
