@@ -27,9 +27,10 @@ x1, x2, y1, y2 = wall, size_x - wall, wall, size_y - wall
 
 class Ball:
     def __init__(self, x1, x2, y1, y2):
+        '''Вводятся область в которой происходит генерация шаров'''
         self.x = randint(x1, x2)
         self.y = randint(y1, y2)
-        self.r = randint(5, 50)
+        self.r = randint(10, 50)
         self.vx = random() * speed * 2 - speed
         self.vy = random() * speed * 2 - speed
         self.color = COLORS[randint(0, 5)]
@@ -61,6 +62,7 @@ class Ball:
             self.vy = random() * speed
 
     def blast(self, x, y):
+        '''Лопание шариков'''
         if ((self.x - x) ** 2 + (self.y - y) ** 2) <= self.r ** 2:
             self.Del = unit.pop(i)
             return(1)
@@ -70,15 +72,17 @@ class Ball:
 
 class Square:
     def __init__(self, x1, x2, y1, y2):
+        '''Вводятся область в которой происходит генерация квадратов'''
         self.x = randint(x1, x2)
         self.y = randint(y1, y2)
-        self.r = randint(5, 100)
-        self.a = 1
+        self.r = randint(10, 100)
+        self.a = 1  # максимальное ускорение
         self.vx = random() * speed * 2 - speed
         self.vy = random() * speed * 2 - speed
         self.ax = random() * self.a * 2 - self.a
         self.ay = random() * self.a * 2 - self.a
-        self.color = COLORS[randint(0, 5)]
+        self.c = randint(0, 255)
+        self.color = [self.c, self.c, self.c]
 
     def move(self, t):
         '''
@@ -92,6 +96,11 @@ class Square:
 
     def vyvod(self):
         '''Рисование квадрата'''
+        if self.color == [255, 255, 255]:
+            self.color = [0, 0, 0]
+        else:
+            for i in range(3):
+                self.color[i] += 1
         rect(screen, self.color, (self.x - self.r /
              2, self.y - self.r / 2, self.r, self.r))
 
@@ -119,7 +128,7 @@ class Square:
             self.ay = random() * self.a * 2 - self.a
 
     def blast(self, x, y):
-        '''Хлопание шариков'''
+        '''Хлопание квадратов'''
         if abs(self.x - x) <= self.r and abs(self.y - y) <= self.r:
             self.Del = unit.pop(i)
             return(1)
@@ -145,6 +154,7 @@ while not finished:
         if event.type == pygame.QUIT:
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            '''Хлопание'''
             for i in range(len(unit)-1, -1, -1):
                 score += unit[i].blast(event.pos[0], event.pos[1])
     pygame.display.update()
