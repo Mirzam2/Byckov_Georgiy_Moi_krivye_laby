@@ -1,10 +1,12 @@
+from os import name
 import pygame
+import json
 import pygame.freetype
 from pygame.draw import *
 from random import randint, random
 pygame.init()
 FPS = 30
-size_x, size_y = 1400, 800  # размеры экрана
+size_x, size_y = 600, 400  # размеры экрана
 wall = 100  # толщина стенок
 screen = pygame.display.set_mode((size_x, size_y))
 
@@ -17,12 +19,15 @@ CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
 COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 my_font = pygame.freetype.SysFont(
-    'Times New Roman', 35)  # задание парамтров текста
-number_of_unit = 50  # количество объектов
+    'Times New Roman', 35)  # задание параметров текста
+number_of_unit = 5  # количество объектов
 speed = 10  # максимальная скорость мячей
+price_ball = 1
+price_square = 5
 score = 0  # счётчик пойманных мячей
 unit = list()
 x1, x2, y1, y2 = wall, size_x - wall, wall, size_y - wall
+timer = 0
 
 
 class Ball:
@@ -65,7 +70,7 @@ class Ball:
         '''Лопание шариков'''
         if ((self.x - x) ** 2 + (self.y - y) ** 2) <= self.r ** 2:
             self.Del = unit.pop(i)
-            return(1)
+            return(price_ball)
         else:
             return(0)
 
@@ -75,7 +80,7 @@ class Square:
         '''Вводятся область в которой происходит генерация квадратов'''
         self.x = randint(x1, x2)
         self.y = randint(y1, y2)
-        self.r = randint(10, 100)
+        self.r = randint(10, 50)
         self.a = 1  # максимальное ускорение
         self.vx = random() * speed * 2 - speed
         self.vy = random() * speed * 2 - speed
@@ -131,7 +136,7 @@ class Square:
         '''Хлопание квадратов'''
         if abs(self.x - x) <= self.r and abs(self.y - y) <= self.r:
             self.Del = unit.pop(i)
-            return(1)
+            return(price_square)
         else:
             return(0)
 
@@ -147,9 +152,9 @@ for i in range(number_of_squers):
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
-
-while not finished:
+while not finished and timer <= 60 and len(unit) != 0:
     clock.tick(FPS)
+    timer += 1 / FPS
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
@@ -160,10 +165,26 @@ while not finished:
     pygame.display.update()
     screen.fill((255, 255, 255))
     rect(screen, BLACK, (x1, y1, (x2-x1), (y2-y1)))
-    my_font.render_to(screen, (20, 20), "score:" + str(score), BLACK)
+    my_font.render_to(screen, (20, 20), "score:" + str(score) + "/" +
+                      str(number_of_balls * price_ball + number_of_squers * price_square), BLACK)
     for i in range(len(unit)):
         unit[i].vyvod()
         unit[i].move(1)
         unit[i].sten(x1, x2, y1, y2, 1)
-
+print('Enter your name')
+name = input()
+with open(r"D:\Проги\Byckov_Georgiy_Moi_krivye_laby\catch_a_balloon\record_table.json") as f:
+    data = json.load(f)
+data[name] = score
+if len(unit) == 0:
+    rect(screen, RED, (0, 0, size_x, size_y))
+    my_font.render_to(screen, (20, 20), "your are fucking slave", (255,255,255))
+h = 50
+for k, v in data.items():
+    my_font.render_to(screen, (20, h), k + ":=" + str(v), (255,255,255))
+    h += 30
+    pygame.display.update()
+    clock.tick(1)
+with open (r"D:\Проги\Byckov_Georgiy_Moi_krivye_laby\catch_a_balloon\record_table.json",'w') as f:
+    json.dump(data,f)
 pygame.quit()
