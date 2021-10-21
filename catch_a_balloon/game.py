@@ -173,6 +173,7 @@ while not finished and timer <= deadline and len(unit) != 0:
         unit[i].vyvod()
         unit[i].move(1)
         unit[i].sten(x1, x2, y1, y2, 1)
+'''Ввод имени'''
 screen.fill(BLACK)
 my_font.render_to(screen, (100, 100), "Введите своё имя:", RED)
 pygame.display.update()
@@ -198,12 +199,13 @@ data[name] = score
 if len(unit) == 0:
     rect(screen, RED, (0, 0, size_x, size_y))
     my_font.render_to(screen, (20, 20),
-                      name + " - dungeon master", (255, 255, 255))
+                      name + " - dungeon master", (255, 255, 255))#если лопнул все
 else:
     rect(screen, RED, (0, 0, size_x, size_y))
     my_font.render_to(screen, (20, 20),
-                      name + " - fucking slave", (255, 255, 255))
+                      name + " - fucking slave", (255, 255, 255))#если лопнул не всё
 h = 50
+"""Вывод таблицы рекордов"""
 for k, v in data.items():
     my_font.render_to(screen, (20, h), k + ":=" + str(v), (255, 255, 255))
     h += 30
