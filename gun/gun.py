@@ -1,8 +1,9 @@
 import math
 import random
 from random import choice
-
+from pygame import transform
 import pygame
+from pygame.cursors import sizer_x_strings
 from pygame.draw import *
 import pygame.freetype
 
@@ -22,7 +23,6 @@ GAME_COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
 
 WIDTH = 800
 HEIGHT = 600
-
 
 
 class Ball:
@@ -53,13 +53,12 @@ class Ball:
         # FIXME
         self.vy += self.g
         if not(0 < self.x - self.r + self.vx < 800):
-                self.vx = - self.vx / 2
+            self.vx = - self.vx / 2
         if not(0 < self.y - self.r - self.vy < 450):
-                self.vy = - self.vy / 2
+            self.vy = - self.vy / 2
         self.live -= 1
         self.x += self.vx
         self.y -= self.vy
-    
 
     def draw(self):
         pygame.draw.circle(
@@ -156,7 +155,15 @@ class Target:
         self.points += points
 
     def draw(self):
-        circle(screen, self.color,(self.x, self.y),self.r)
+        circle(screen, self.color, (self.x, self.y), self.r)
+
+
+class People(Target):
+    def draw(self):
+        image = pygame.image.load(
+            r'D:\Проги\Byckov_Georgiy_Moi_krivye_laby\gun\George_Floyd.png')
+        image = transform.rotozoom(image, 0, self.r / 235)
+        screen.blit(image, (self.x, self.y))
 
 
 pygame.init()
@@ -168,12 +175,15 @@ clock = pygame.time.Clock()
 gun = Gun(screen)
 target = Target()
 finished = False
-
+p = People()
 while not finished:
     screen.fill(WHITE)
+
+    p.draw()
     my_font = pygame.freetype.SysFont(
         'Times New Roman', 25)  # задание параметров текста
-    my_font.render_to(screen, (20, 20), "Количество попаданий " + str(target.points), BLACK)
+    my_font.render_to(screen, (20, 20),
+                      "Количество попаданий " + str(target.points + p.points), BLACK)
     gun.draw()
     target.draw()
     for b in balls:
@@ -191,17 +201,19 @@ while not finished:
         elif event.type == pygame.MOUSEMOTION:
             gun.targetting(event)
 
-    for i in range(len(balls)-1,-1,-1):
+    for i in range(len(balls)-1, -1, -1):
         b = balls[i]
         b.move()
-       
-        if b.hittest(target) and target.live:
+        if b.hittest(p) and p.live:
+            p.live = 1
+            p.hit(5)
+            p.new_target()
+        if b.hittest(target):
             target.live = 1
             target.hit()
-            target.new_target() 
+            target.new_target()
         if b.live <= 0:
             balls.pop(i)
-            
 
     gun.power_up()
 
