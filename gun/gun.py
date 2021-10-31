@@ -78,6 +78,7 @@ class Ball:
         """
         # FIXME
         if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
+            self.live = 0
             return True
         else:
             return False
@@ -122,15 +123,19 @@ class Gun:
             self.color = GREY
 
     def draw(self):
+        '''Прорисовка пушки'''
         line(screen, self.color, (20, 450), (math.cos(self.an) *
              self.f2_power + 20, math.sin(self.an) * self.f2_power + 450), width=7)
         # FIXIT don't know how to do it
 
     def power_up(self):
+        '''Накапливание силы'''
         if self.f2_on:
             if self.f2_power < 100:
                 self.f2_power += 1
-            self.color = RED
+                self.color = GREY
+            else:
+                self.color = RED
         else:
             self.color = GREY
 
@@ -140,7 +145,6 @@ class Target:
 
         self.points = 0
         self.live = 1
-    # FIXME: don't work!!! How to call this functions when object is created?
         self.new_target()
 
     def new_target(self):
@@ -159,6 +163,16 @@ class Target:
 
 
 class People(Target):
+    def move(self):
+        if not(0 <= self.y <= HEIGHT):
+            self.speed *= -1
+        self.y += self.speed
+    def new_target(self):
+        self.x = random.randint(500, 600)
+        self.y = random.randint(200, 450)
+        self.r = random.randint(50, 70)
+        self.speed = random.random() * 15 - 7.5
+
     def draw(self):
         image = pygame.image.load(
             r'D:\Проги\Byckov_Georgiy_Moi_krivye_laby\gun\George_Floyd.png')
@@ -183,7 +197,7 @@ while not finished:
     my_font = pygame.freetype.SysFont(
         'Times New Roman', 25)  # задание параметров текста
     my_font.render_to(screen, (20, 20),
-                      "Количество попаданий " + str(target.points + p.points), BLACK)
+                      "Количество очков " + str(target.points + p.points), BLACK)
     gun.draw()
     target.draw()
     for b in balls:
@@ -214,7 +228,7 @@ while not finished:
             target.new_target()
         if b.live <= 0:
             balls.pop(i)
-
+    p.move()
     gun.power_up()
 
 pygame.quit()
