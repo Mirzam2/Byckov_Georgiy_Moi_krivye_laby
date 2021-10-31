@@ -68,21 +68,6 @@ class Ball:
             self.r
         )
 
-    def hittest(self, obj):
-        """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
-
-        Args:
-            obj: Обьект, с которым проверяется столкновение.
-        Returns:
-            Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
-        """
-        # FIXME
-        if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
-            self.live = 0
-            return True
-        else:
-            return False
-
 
 class Gun:
     def __init__(self, screen):
@@ -161,12 +146,35 @@ class Target:
     def draw(self):
         circle(screen, self.color, (self.x, self.y), self.r)
 
+    def hittest(self, obj):
+        """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
+
+        Args:
+            obj: Обьект, с которым проверяется столкновение.
+        Returns:
+            Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
+        """
+        # FIXME
+        if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
+            obj.live = 0
+            return True
+        else:
+            return False
+
 
 class People(Target):
+    def hittest(self, obj):
+        if (-obj.r <= obj.x - self.x <= 232 * self.r / 235 + obj.r) and (-obj.r <= obj.y - self.y <= 288 * self.r / 235 + obj.r):
+            obj.live = 0
+            return True
+        else:
+            return False
+
     def move(self):
         if not(0 <= self.y <= HEIGHT):
             self.speed *= -1
         self.y += self.speed
+
     def new_target(self):
         self.x = random.randint(500, 600)
         self.y = random.randint(200, 450)
@@ -214,21 +222,21 @@ while not finished:
             gun.fire2_end(event)
         elif event.type == pygame.MOUSEMOTION:
             gun.targetting(event)
-
+    p.move()
     for i in range(len(balls)-1, -1, -1):
         b = balls[i]
         b.move()
-        if b.hittest(p) and p.live:
+        if p.hittest(b) and p.live:
             p.live = 1
             p.hit(5)
             p.new_target()
-        if b.hittest(target):
+        if target.hittest(b):
             target.live = 1
             target.hit()
             target.new_target()
         if b.live <= 0:
             balls.pop(i)
-    p.move()
+
     gun.power_up()
 
 pygame.quit()
