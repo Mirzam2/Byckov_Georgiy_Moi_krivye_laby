@@ -71,7 +71,8 @@ class Ball:
 class Square(Ball):
     def __init__(self, screen: pygame.Surface, x=40, y=450):
         super().__init__(screen, x=x, y=y)
-        self.g = 0
+        self.g = 5
+
 
     def draw(self):
         super().draw()
@@ -88,6 +89,7 @@ class Gun:
         self.type_bullet = 1
         self.x = x
         self.y = y
+        self.r = 50
         self.color = GREY
 
     def fire2_start(self, event):
@@ -126,9 +128,10 @@ class Gun:
 
     def draw(self):
         '''Прорисовка пушки'''
+        circle(screen, BLACK,(self.x, self.y), self.r * self.f2_power/100)
         line(screen, self.color, (self.x, self.y), (math.cos(self.an) *
              self.f2_power + self.x, math.sin(self.an) * self.f2_power + self.y), width=7)
-        # FIXIT don't know how to do it
+
 
     def power_up(self):
         '''Накапливание силы'''
@@ -240,9 +243,9 @@ while not finished:
             gun.targetting(event)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                gun.y -= 5
+                gun.y -= 10
             elif event.key == pygame.K_DOWN:
-                gun.y += 5
+                gun.y += 10
     p.move()
     for i in range(len(balls)-1, -1, -1):
         b = balls[i]
