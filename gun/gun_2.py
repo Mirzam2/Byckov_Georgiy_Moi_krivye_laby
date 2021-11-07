@@ -42,7 +42,6 @@ class Ball:
         self.vy = 0
         self.color = choice(GAME_COLORS)
         self.live = 60
-
     def move(self):
         """Переместить мяч по прошествии единицы времени.
 
@@ -91,6 +90,7 @@ class Gun:
         self.y = y
         self.r = 50
         self.color = GREY
+        self.cord = 0
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -100,7 +100,7 @@ class Gun:
 
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
-        """
+        """        
         global balls
         if self.type_bullet == 1:
             self.type_bullet = 2
@@ -116,21 +116,30 @@ class Gun:
         balls.append(self.new_ball)
         self.f2_on = 0
         self.f2_power = 10
-
+    
     def targetting(self, event):
         """Прицеливание. Зависит от положения мыши."""
-        if event:
-            self.an = math.atan((event.pos[1]-450) / (event.pos[0]-20))
+        try:
+            if event:
+                self.cord = event.pos[0]
+                self.an = math.atan((event.pos[1]-self.y) / (event.pos[0]-self.x))
+        except ZeroDivisionError:
+            pass       
         if self.f2_on:
             self.color = RED
         else:
             self.color = GREY
 
+
     def draw(self):
         '''Прорисовка пушки'''
         circle(screen, BLACK,(self.x, self.y), self.r * self.f2_power/100)
-        line(screen, self.color, (self.x, self.y), (math.cos(self.an) *
-             self.f2_power + self.x, math.sin(self.an) * self.f2_power + self.y), width=7)
+        if self.cord < self.x:
+            self.flag = -1
+        else:
+            self.flag = 1
+        line(screen, self.color, (self.x, self.y), (self.flag * math.cos(self.an) *
+             self.f2_power + self.x, self.flag * math.sin(self.an) * self.f2_power + self.y), width=7)
 
 
     def power_up(self):
@@ -143,6 +152,19 @@ class Gun:
                 self.color = RED
         else:
             self.color = GREY
+    def hittest(self, obj):
+        """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
+
+        Args:
+            obj: Обьект, с которым проверяется столкновение.
+        Returns:
+            Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
+        """
+        if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
+            obj.live = 0
+            return True
+        else:
+            return False
 
 
 class Target:
@@ -174,7 +196,6 @@ class Target:
         Returns:
             Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
         """
-        # FIXME
         if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
             obj.live = 0
             return True
@@ -207,25 +228,28 @@ class People(Target):
         image = transform.rotozoom(image, 0, self.r / 235)
         screen.blit(image, (self.x, self.y))
 
-
+def end():
+    pass
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 balls = []
 
 clock = pygame.time.Clock()
-gun = Gun(screen)
+gun_main = Gun(screen)
+gun2 = Gun(screen, 500,450)
 target = Target()
 finished = False
-p = People()
+people = People()
 while not finished:
     screen.fill(WHITE)
 
-    p.draw()
+    people.draw()
     my_font = pygame.freetype.SysFont(
         'Times New Roman', 25)  # задание параметров текста
     my_font.render_to(screen, (20, 20),
-                      "Количество очков " + str(target.points + p.points), BLACK)
-    gun.draw()
+                      "Количество очков " + str(target.points + people.points), BLACK)
+    gun_main.draw()
+    gun2.draw()
     target.draw()
     for b in balls:
         b.draw()
@@ -236,31 +260,38 @@ while not finished:
         if event.type == pygame.QUIT:
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            gun.fire2_start(event)
+            gun_main.fire2_start(event)
+            gun2.fire2_start(event)
         elif event.type == pygame.MOUSEBUTTONUP:
-            gun.fire2_end(event)
+            gun_main.fire2_end(event)
+            gun2.fire2_end(event)
         elif event.type == pygame.MOUSEMOTION:
-            gun.targetting(event)
+            gun_main.targetting(event)
+            gun2.targetting(event)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                gun.y -= 10
+                gun_main.y -= 10
+                gun2.y -= 10
             elif event.key == pygame.K_DOWN:
-                gun.y += 10
-    p.move()
+                gun_main.y += 10
+                gun2.y += 10
+    people.move()
     for i in range(len(balls)-1, -1, -1):
         b = balls[i]
         b.move()
-        if p.hittest(b) and p.live:
-            p.live = 1
-            p.hit(5)
-            p.new_target()
+        if people.hittest(b) and people.live:
+            people.live = 1
+            people.hit(5)
+            people.new_target()
         if target.hittest(b):
             target.live = 1
             target.hit()
             target.new_target()
+        if gun_main.hittest(b):
+            finished = True
         if b.live <= 0:
             balls.pop(i)
 
-    gun.power_up()
-
+    gun_main.power_up()
+    gun2.power_up()
 pygame.quit()
