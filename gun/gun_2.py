@@ -42,6 +42,7 @@ class Ball:
         self.vy = 0
         self.color = choice(GAME_COLORS)
         self.live = 60
+
     def move(self):
         """Переместить мяч по прошествии единицы времени.
 
@@ -67,11 +68,26 @@ class Ball:
         )
 
 
+class Lazer(Ball):
+    def __init__(self, screen: pygame.Surface, x=40, y=450):
+        super().__init__(screen, x=x, y=y)
+        self.g = 0
+
+    def draw(self):
+        super().draw()
+        pygame.draw.polygon(self.screen, (255, 255, 255), ((self.x - self.r, self.y), (self.x,
+                            self.y - self.r), (self.x + self.r, self.y), (self.x, self.y + self.r)), width=4)
+        pygame.draw.polygon(self.screen, (0, 0, 0), ((self.x - self.r * math.cos(math.pi / 4), self.y - self.r *
+                            math.cos(math.pi / 4)), (self.x - self.r * math.cos(math.pi / 4), self.y + self.r * math.cos(math.pi / 4)),
+            (self.x + self.r * math.cos(math.pi / 4),
+             self.y + self.r * math.cos(math.pi / 4)),
+            (self.x + self.r * math.cos(math.pi / 4), self.y + self.r * math.cos(math.pi / 4))), width=4)
+
+
 class Square(Ball):
     def __init__(self, screen: pygame.Surface, x=40, y=450):
         super().__init__(screen, x=x, y=y)
         self.g = 5
-
 
     def draw(self):
         super().draw()
@@ -82,7 +98,7 @@ class Square(Ball):
 class Gun:
     def __init__(self, screen, x=20, y=450):
         self.screen = screen
-        self.f2_power = 10
+        self.f2_power = 40
         self.f2_on = 0
         self.an = 1
         self.type_bullet = 1
@@ -100,14 +116,20 @@ class Gun:
 
         Происходит при отпускании кнопки мыши.
         Начальные значения компонент скорости мяча vx и vy зависят от положения мыши.
-        """        
+        """
         global balls
+        if self.cord < self.x:
+            self.flag = -1
+        else:
+            self.flag = 1
+        self.x0 = self.flag * math.cos(self.an) * self.f2_power + self.x
+        self.y0 = self.flag * math.sin(self.an) * self.f2_power + self.y
         if self.type_bullet == 1:
             self.type_bullet = 2
-            self.new_ball = Square(self.screen, self.x, self.y)
+            self.new_ball = Square(self.screen, self.x0, self.y0)
         elif self.type_bullet == 2:
             self.type_bullet = 1
-            self.new_ball = Ball(self.screen, self.x, self.y)
+            self.new_ball = Ball(self.screen, self.x0, self.y0)
         self.new_ball.r += 5
         self.an = math.atan2(
             (event.pos[1] - self.new_ball.y), (event.pos[0] - self.new_ball.x))
@@ -115,32 +137,31 @@ class Gun:
         self.new_ball.vy = - self.f2_power * math.sin(self.an)
         balls.append(self.new_ball)
         self.f2_on = 0
-        self.f2_power = 10
-    
+        self.f2_power = 40
+
     def targetting(self, event):
         """Прицеливание. Зависит от положения мыши."""
         try:
             if event:
                 self.cord = event.pos[0]
-                self.an = math.atan((event.pos[1]-self.y) / (event.pos[0]-self.x))
+                self.an = math.atan(
+                    (event.pos[1]-self.y) / (event.pos[0]-self.x))
         except ZeroDivisionError:
-            pass       
+            pass
         if self.f2_on:
             self.color = RED
         else:
             self.color = GREY
 
-
     def draw(self):
         '''Прорисовка пушки'''
-        circle(screen, BLACK,(self.x, self.y), self.r * self.f2_power/100)
+        circle(screen, BLACK, (self.x, self.y), self.r * self.f2_power/100)
         if self.cord < self.x:
             self.flag = -1
         else:
             self.flag = 1
         line(screen, self.color, (self.x, self.y), (self.flag * math.cos(self.an) *
              self.f2_power + self.x, self.flag * math.sin(self.an) * self.f2_power + self.y), width=7)
-
 
     def power_up(self):
         '''Накапливание силы'''
@@ -152,6 +173,7 @@ class Gun:
                 self.color = RED
         else:
             self.color = GREY
+
     def hittest(self, obj):
         """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
 
@@ -165,6 +187,18 @@ class Gun:
             return True
         else:
             return False
+
+
+class Enemy(Gun):
+    def targetting(self, obj):
+        try:
+            self.an = math.atan((obj.y - self.y) / (obj.x - self.x))
+        except ZeroDivisionError:
+            if obj.x >= self.x:
+                self.an = math.pi / 2
+            else:
+                self.an = -math.pi / 2
+        
 
 
 class Target:
@@ -228,15 +262,18 @@ class People(Target):
         image = transform.rotozoom(image, 0, self.r / 235)
         screen.blit(image, (self.x, self.y))
 
+
 def end():
     pass
+
+
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 balls = []
 
 clock = pygame.time.Clock()
 gun_main = Gun(screen)
-gun2 = Gun(screen, 500,450)
+gun2 = Enemy(screen, 500, 450)
 target = Target()
 finished = False
 people = People()
@@ -267,7 +304,7 @@ while not finished:
             gun2.fire2_end(event)
         elif event.type == pygame.MOUSEMOTION:
             gun_main.targetting(event)
-            gun2.targetting(event)
+            gun2.targetting(gun_main)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 gun_main.y -= 10
@@ -288,7 +325,7 @@ while not finished:
             target.hit()
             target.new_target()
         if gun_main.hittest(b):
-            finished = True
+            pass
         if b.live <= 0:
             balls.pop(i)
 
