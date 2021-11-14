@@ -41,7 +41,7 @@ class Ball:
         self.vx = 0
         self.vy = 0
         self.color = choice(GAME_COLORS)
-        self.live = 60
+        self.live = 120
 
     def move(self):
         """Переместить мяч по прошествии единицы времени.
@@ -76,12 +76,12 @@ class Lazer(Ball):
     def draw(self):
         super().draw()
         pygame.draw.polygon(self.screen, (255, 255, 255), ((self.x - self.r, self.y), (self.x,
-                            self.y - self.r), (self.x + self.r, self.y), (self.x, self.y + self.r)), width=4)
+                            self.y - self.r), (self.x + self.r, self.y), (self.x, self.y + self.r)), width=2)
         pygame.draw.polygon(self.screen, (0, 0, 0), ((self.x - self.r * math.cos(math.pi / 4), self.y - self.r *
                             math.cos(math.pi / 4)), (self.x - self.r * math.cos(math.pi / 4), self.y + self.r * math.cos(math.pi / 4)),
             (self.x + self.r * math.cos(math.pi / 4),
              self.y + self.r * math.cos(math.pi / 4)),
-            (self.x + self.r * math.cos(math.pi / 4), self.y + self.r * math.cos(math.pi / 4))), width=4)
+            (self.x + self.r * math.cos(math.pi / 4), self.y - self.r * math.cos(math.pi / 4))), width=2)
 
 
 class Square(Ball):
@@ -155,7 +155,7 @@ class Gun:
 
     def draw(self):
         '''Прорисовка пушки'''
-        circle(screen, BLACK, (self.x, self.y), self.r * self.f2_power/100)
+        circle(screen, BLACK, (self.x, self.y), self.r * self.f2_power / 100)
         if self.cord < self.x:
             self.flag = -1
         else:
@@ -182,7 +182,7 @@ class Gun:
         Returns:
             Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
         """
-        if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r + obj.r) ** 2:
+        if (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2 <= (self.r * self.f2_power / 100 + obj.r) ** 2:
             obj.live = 0
             return True
         else:
@@ -190,14 +190,23 @@ class Gun:
 
 
 class Enemy(Gun):
-    def targetting(self, obj):
-        try:
-            self.an = math.atan((obj.y - self.y) / (obj.x - self.x))
-        except ZeroDivisionError:
-            if obj.x >= self.x:
-                self.an = math.pi / 2
-            else:
-                self.an = -math.pi / 2
+    def __init__(self, screen, x=400, y=400):
+        super().__init__(screen, x=x, y=y)
+
+    def fire2_end(self, event):
+        self.new_ball = Lazer(self.screen, self.x, self.y)
+        self.new_ball.r += 5
+        self.new_ball.vx = -self.f2_power / 10
+        balls.append(self.new_ball)
+        self.an = math.pi
+        self.f2_on = 0
+        self.f2_power = 40
+
+    def draw(self):
+        image_enemy = pygame.image.load(
+            r'D:\Проги\Byckov_Georgiy_Moi_krivye_laby\gun\Enemy.png')
+        image_enemy = transform.rotozoom(image_enemy, 0, self.r / 200)
+        screen.blit(image_enemy, (self.x - 75, self.y - 75))
         
 
 
@@ -254,7 +263,7 @@ class People(Target):
         self.x = random.randint(500, 600)
         self.y = random.randint(200, 450)
         self.r = random.randint(50, 70)
-        self.speed = random.random() * 15 - 7.5
+        self.speed = random.random() * 30 - 15
 
     def draw(self):
         image = pygame.image.load(
@@ -277,6 +286,7 @@ gun2 = Enemy(screen, 500, 450)
 target = Target()
 finished = False
 people = People()
+timer = 0
 while not finished:
     screen.fill(WHITE)
 
@@ -293,6 +303,7 @@ while not finished:
     pygame.display.update()
 
     clock.tick(FPS)
+    timer += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
@@ -304,7 +315,6 @@ while not finished:
             gun2.fire2_end(event)
         elif event.type == pygame.MOUSEMOTION:
             gun_main.targetting(event)
-            gun2.targetting(gun_main)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 gun_main.y -= 10
@@ -312,6 +322,8 @@ while not finished:
             elif event.key == pygame.K_DOWN:
                 gun_main.y += 10
                 gun2.y += 10
+    if timer % 60 == 0:
+        gun2.fire2_end(event)
     people.move()
     for i in range(len(balls)-1, -1, -1):
         b = balls[i]
@@ -325,7 +337,7 @@ while not finished:
             target.hit()
             target.new_target()
         if gun_main.hittest(b):
-            pass
+            finished = True
         if b.live <= 0:
             balls.pop(i)
 
