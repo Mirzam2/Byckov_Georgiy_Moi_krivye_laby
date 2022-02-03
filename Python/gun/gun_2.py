@@ -6,6 +6,7 @@ import pygame
 from pygame.cursors import sizer_x_strings
 from pygame.draw import *
 import pygame.freetype
+import pathlib
 
 
 FPS = 30
@@ -203,8 +204,7 @@ class Enemy(Gun):
         self.f2_power = 40
 
     def draw(self):
-        image_enemy = pygame.image.load(
-            r'D:\Проги\Byckov_Georgiy_Moi_krivye_laby\gun\Enemy.png')
+        image_enemy = pygame.image.load(pathlib.Path(pathlib.Path.cwd(),"Enemy.png"))
         image_enemy = transform.rotozoom(image_enemy, 0, self.r / 200)
         screen.blit(image_enemy, (self.x - 75, self.y - 75))
         
@@ -267,7 +267,7 @@ class People(Target):
 
     def draw(self):
         image = pygame.image.load(
-            r'D:\Проги\Byckov_Georgiy_Moi_krivye_laby\gun\George_Floyd.png')
+            r'D:\Progi\Byckov_Georgiy_Moi_krivye_laby\gun\George_Floyd.png')
         image = transform.rotozoom(image, 0, self.r / 235)
         screen.blit(image, (self.x, self.y))
 
