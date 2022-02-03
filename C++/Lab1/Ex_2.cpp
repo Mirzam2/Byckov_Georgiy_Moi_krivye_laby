@@ -12,6 +12,11 @@ int main()
         double x = -c * 1.0 / b;
         cout << x;
     }
+    else if (a == 0 and b == 0)
+    {
+        if (c != 0)
+            cout << "\n";
+    }
     else if (d > 0)
     {
         cout << (-b - sqrt(d)) / a / 2 << " " << (-b + sqrt(d)) / a / 2;
