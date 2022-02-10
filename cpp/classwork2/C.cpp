@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
-void c0ut(bool flag){
+void c0ut(bool flag)
+{
     if (flag)
         cout << "YES" << endl;
     else
