@@ -21,7 +21,10 @@ int main()
         cin >> a;
     }
     if (flag)
+    {
+        cout << endl;
         return 0;
+    }
     while (a != 0)
     {
         if ((a % 2 == 0) and (a > max))
