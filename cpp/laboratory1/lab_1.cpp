@@ -1,19 +1,45 @@
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <ctime>
+
 using namespace std;
+
+const long int N = 10; // размер локации
+const int K = 25;       //количество дислокаций
+
 //генерация случайностей
 mt19937 generator(time(0));
 uniform_int_distribution<int> distr(1, 4);
+uniform_int_distribution<int> unit_generate(0, N - 1);
 
-const int N = 1000;                                // размер локации
-const int K = 1;                                   //количество дислокаций
 void dislok(short (&mas)[N][N], int (&disl)[K][2]) // фунция генерации начальных положений дизлокаций
 {
-    mas[N / 2][N / 2] = 1;
-    disl[0][0] = N / 2;
-    disl[0][1] = N / 2;
-    //mas[4][5] = 1;disl[1][0] = 4;disl[1][1] = 5;
+    if (K == 1) // что бы в опытах для 1 задания генерировалась в центре
+    {
+        mas[N / 2][N / 2] = 1;
+        disl[0][0] = N / 2;
+        disl[0][1] = N / 2;
+    }
+    else
+    {
+        for (int unit = 0; unit < K; unit++)
+        {
+            while (true)
+            {
+                // генерация случайных положений
+                int unit_i = unit_generate(generator);
+                int unit_j = unit_generate(generator);
+                if (mas[unit_i][unit_j] == 0) // проверка что бы не было пересечений
+                {
+                    mas[unit_i][unit_j] = 1;
+                    disl[unit][0] = unit_i;
+                    disl[unit][1] = unit_j;
+                    break;
+                }
+            }
+        }
+    }
 }
 void print(short (&mas)[N][N]) // функция вывода массива
 {
@@ -26,18 +52,18 @@ void print(short (&mas)[N][N]) // функция вывода массива
         cout << endl;
     }
 }
-void swap(int &a, int &b) // фунция обмена местами
+void swap(int &a, int &b) // функция обмена местами
 {
     int temp = a;
     a = b;
     b = temp;
 }
-short clash(short (&mas)[N][N], int i_1, int j_1, int i, int j, bool &flag)
+short clash(short int (&mas)[N][N], int i_1, int j_1, int i, int j, bool &flag) // проверка и действие на слипанием с другой дислокацией
 {
     short dk = 0;
     if (mas[i_1][j_1] > 0)
     {
-        if (mas[i_1][j_1] != 2)
+        if (mas[i_1][j_1] == 1)
         {
             mas[i_1][j_1] = 2;
             dk++;
@@ -49,12 +75,48 @@ short clash(short (&mas)[N][N], int i_1, int j_1, int i, int j, bool &flag)
             flag = false;
         }
     }
+    //cout << dk << endl;
     return dk;
 }
-long long int exp(short (&mas)[N][N], int (&disl)[K][2])
+void file_save(long long int(data)[], int size)
 {
-    int k = K;           // количество дизлокаций которые могут двигаться
-    long long int s = 0; // счетчик шагов
+    ofstream file("results.json"); // Открываем файл для записи
+    file << "[" << endl;
+    for (int i = 0; i < size - 1; i++)
+    {
+        file << data[i] << ", "; // Запись в файл оператором <<
+    }
+    file << data[size - 1];
+    file << "]";
+    file.close(); // Закрывем файл!!!
+}
+long long int exp(short (&mas)[N][N], int (&disl)[K][2]) // эксперимент
+{
+    int k = K;                              // счетчик дизлокаций которые могут двигаться
+    long long int s = 0;                    // счетчик шагов
+    long long int s_1 = 0;                  // счетчик что бы не переполнилось
+    long long int stop = 100000000 / K - 1; // предел массива генерации
+    for (int mem = 0; mem < K; mem++)
+        {
+            int i = disl[mem][0];
+            int j = disl[mem][1];
+            if (mas[i][j] == 1)
+            {
+                if (i == 0 or i == N - 1 or j == 0 or j == N - 1) // проверка на касание края
+                {
+                    mas[i][j] = 2; // дизлокации которые остановились
+                    k = k - 1;
+                }
+                else
+                {
+                    bool flag = true;
+                    k = k - clash(mas, i + 1, j, i, j, flag);
+                    k = k - clash(mas, i - 1, j, i, j, flag);
+                    k = k - clash(mas, i, j + 1, i, j, flag);
+                    k = k - clash(mas, i, j + 1, i, j, flag);
+                }
+            }
+        }
     while (k > 0)
     {
         for (int mem = 0; mem < K; mem++)
@@ -70,60 +132,95 @@ long long int exp(short (&mas)[N][N], int (&disl)[K][2])
                 {
                 case 1:
                     i_1 = i + 1; // вверх
-                    // cout << "sos1";
-                    // mas[i][j] = 3; // замена что бы за один цикл не двигалось несколько раз
                     break;
                 case 2:
-                    // cout << "sos2";
                     j_1 = j + 1; // вправо
-                    // mas[i][j] = 3; // замена что бы за один цикл не двигалось несколько раз
                     break;
                 case 3:
-                    // cout << "sos3";
                     i_1 = i - 1; // вниз
                     break;
                 case 4:
-                    // cout << "sos4";
                     j_1 = j - 1; // влево
                     break;
                 }
-                // cout << "i_1 = " << i_1 << " j_1 = " << j_1 << endl;
-                swap(mas[i][j], mas[i_1][j_1]); // движение
+                if (mas[i_1][j_1] == 0) // проверка что бы не врезались
+                {
+                    swap(mas[i][j], mas[i_1][j_1]); // движение
+                }
+                else
+                {
+                    // не двигается
+                    i_1 = i;
+                    j_1 = j;
+                }
                 disl[mem][0] = i_1;
                 disl[mem][1] = j_1;
-                if (i_1 == 0 or i_1 == N - 1 or j_1 == 0 or j_1 == N - 1) // проверка на касание края
+            }
+            // print(mas); cout << endl << k << endl;
+            //  cout << disl[0][0] << " " << disl[0][1] << endl;
+            s_1++;
+            if (s_1 >= stop)
+            {
+                mt19937 generator(time(0));
+                s_1 = 0;
+            }
+        }
+        for (int mem = 0; mem < K; mem++)
+        {
+            int i = disl[mem][0];
+            int j = disl[mem][1];
+            if (mas[i][j] == 1)
+            {
+                if (i == 0 or i == N - 1 or j == 0 or j == N - 1) // проверка на касание края
                 {
-                    mas[i_1][j_1] = 2; // дизлокации которые остановились
+                    mas[i][j] = 2; // дизлокации которые остановились
                     k = k - 1;
                 }
                 else
                 {
                     bool flag = true;
-                    k = k - clash(mas, i_1 + 1, j_1, i_1, j_1, flag);
-                    k = k - clash(mas, i_1 - 1, j_1, i_1, j_1, flag);
-                    k = k - clash(mas, i_1, j_1 + 1, i_1, j_1, flag);
-                    k = k - clash(mas, i_1, j_1 + 1, i_1, j_1, flag);
+                    k = k - clash(mas, i + 1, j, i, j, flag);
+                    k = k - clash(mas, i - 1, j, i, j, flag);
+                    k = k - clash(mas, i, j + 1, i, j, flag);
+                    k = k - clash(mas, i, j + 1, i, j, flag);
                 }
             }
-            // print(mas);
-            // cout << disl[0][0] << " " << disl[0][1] << endl;
-            s++;
         }
+        s++;
+        print(mas);
+        cout << endl
+             << "sosi " << k << endl;
     }
     return s;
 }
 int main()
 {
-    for (int i = 0; i < 10000; i++)
+    const long long int number_generation = 1;
+    // long long int results[number_generation];
+    ofstream file("results.json"); // Открываем файл для записи
+    file << "[" << endl;
+    for (int i = 0; i < number_generation; i++)
     {
-        if (i % 20 == 0){
-            mt19937 generator(time(0));
-        } 
-        short massiv[N][N] = {0};
+        short int massiv[N][N] = {0};
         int disl[K][2] = {0};
         dislok(massiv, disl);
-        cout << exp(massiv, disl) << endl;
-        // rint(massiv);
+        print(massiv);
+        cout << endl;
+        if (i != number_generation - 1)
+        {
+            file << exp(massiv, disl) << ", ";
+        }
+        else
+        {
+            file << exp(massiv, disl);
+        }
+        // Запись в файл оператором <<
+        // results[i] = exp(massiv, disl);
     }
+
+    file << "]";
+    file.close(); // Закрывем файл!!!
+
+    // file_save(results, number_generation);
     return 0;
 }
