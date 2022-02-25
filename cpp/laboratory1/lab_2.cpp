@@ -5,8 +5,8 @@
 
 using namespace std;
 
-const int N_MAX = 1000; //количество дислокаций
-const int K_MAX = 10;
+const int N_MAX = 100; //количество дислокаций
+const long int K_MAX = N_MAX * N_MAX;
 //генерация случайностей
 mt19937 generator(time(0));
 uniform_int_distribution<int> distr(1, 4);
@@ -194,10 +194,10 @@ int main()
 {
     const long long int number_generation = 1000;
     long long int summ = 0;
-    int K = 1;
     ofstream file("results.json"); // Открываем файл для записи
     file << "[" << endl;
-    for (int N = 10; N <= N_MAX; N = N + 10)
+    int N = N_MAX;
+    for (int K = 10; K <= K_MAX; K = K + 10)
     {
         summ = 0;
         for (int i = 0; i < number_generation; i++)
