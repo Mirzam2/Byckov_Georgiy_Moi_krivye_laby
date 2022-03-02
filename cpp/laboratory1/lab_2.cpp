@@ -197,7 +197,7 @@ int main()
     ofstream file("results.json"); // Открываем файл для записи
     file << "[" << endl;
     int N = N_MAX;
-    for (int K = 10; K <= K_MAX; K = K + 10)
+    for (int K = 1; K <= K_MAX; K++)
     {
         summ = 0;
         for (int i = 0; i < number_generation; i++)
@@ -214,7 +214,7 @@ int main()
         }
         summ /= number_generation;
         file << summ;
-        if (N != N_MAX)
+        if (K != K_MAX)
         {
             file << ", ";
         }
