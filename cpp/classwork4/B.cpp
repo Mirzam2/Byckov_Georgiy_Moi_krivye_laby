@@ -3,7 +3,8 @@ int main()
 {
     int n = 0;
     std::cin >> n;
-    int mas[n] = {0};
+    const int N = n;
+    int mas[N] = {0};
     for (int i = 0; i < n; i++)
     {
         std::cin >> mas[i];

@@ -112,7 +112,7 @@ long long int exp(short (&mas)[N_MAX][N_MAX], int (&disl)[K_MAX][2], const int N
                 k = k - clash(mas, i + 1, j, i, j, flag, N);
                 k = k - clash(mas, i - 1, j, i, j, flag, N);
                 k = k - clash(mas, i, j + 1, i, j, flag, N);
-                k = k - clash(mas, i, j + 1, i, j, flag, N);
+                k = k - clash(mas, i, j - 1, i, j, flag, N);
             }
         }
     }
