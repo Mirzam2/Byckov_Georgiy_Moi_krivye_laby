@@ -13,14 +13,14 @@ void print(int *mas, int n) //вывод массива
     }
     std::cout << std::endl;
 }
-void sortic(int *mas, int left, int right) // сортировка 
+void sortic(int *mas, int left, int right) // сортировка
 {
     if (left < right)
     {
         int pos = (left + right) / 2;
         int opor = mas[(left + right) / 2];
         int i = left, j = right;
-        while (bool flag = true)
+        while (true)
         {
             while (mas[i] < opor)
             {
@@ -28,17 +28,15 @@ void sortic(int *mas, int left, int right) // сортировка
             }
             while (mas[j] > opor)
             {
-                j = j - 1;
+                j--;
             }
             if (i >= j)
             {
-                flag = false;
                 pos = j;
                 break;
             }
-            {
-                swap(mas[i++], mas[j--]);
-            }
+
+            swap(mas[i++], mas[j--]);
         }
         sortic(mas, left, pos);
         sortic(mas, pos + 1, right);
@@ -49,7 +47,7 @@ int main()
 {
     int n = 0;
     std::cin >> n;
-    int *mas = 0;
+    int *mas = nullptr;
     mas = new int[n];
     for (int i = 0; i < n; i++)
     {

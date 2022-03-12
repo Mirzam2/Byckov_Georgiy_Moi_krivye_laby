@@ -26,7 +26,7 @@ void sortic(int *mas, int start, int end) // сортировка
         {
             sign = -1;
         }
-        for (int i = end; i > start; i += -2)
+        for (int i = end; i > start; i -= 2)
         {
             if ((sign == 1) and (i == end))
             {
