@@ -14,7 +14,7 @@ float mean(float psi[], float pdf[], float const dv, unsigned size)
 }
 int main()
 {
-    unsigned n = 10000000;
+    unsigned n = 100000;
     float left = -1000;
     int T = 300;
     float right = 1000;
