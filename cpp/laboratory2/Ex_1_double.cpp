@@ -9,7 +9,7 @@ double mean(double psi[], double pdf[], double const dv, unsigned size)
 
     else
     {
-        return mean(psi, pdf, dv, size / 2) + mean(psi +size / 2, pdf + size/2, dv, size - size / 2);
+        return mean(psi, pdf, dv, size / 2) + mean(psi + size / 2, pdf + size / 2, dv, size - size / 2);
     }
 }
 int main()
@@ -29,4 +29,6 @@ int main()
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
     std::cout << mean(psi, pdf, delta, n);
+    delete[] psi;
+    delete[] pdf;
 }

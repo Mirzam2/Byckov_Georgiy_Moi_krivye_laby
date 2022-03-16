@@ -42,4 +42,6 @@ int main()
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
     std::cout << mean(psi, pdf, delta, n);
+    delete[] psi;
+    delete[] pdf;
 }

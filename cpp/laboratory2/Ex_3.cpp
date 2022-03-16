@@ -16,9 +16,9 @@ float mean(float psi[], float pdf[], float const dv, unsigned size)
     for (int i = 0; i < size; i++)
     {
         float y = pdf[i] * psi[i] - c;
-        float t = sum + y;             
-        c = (t - sum) - y;             
-        sum = t;                      
+        float t = sum + y;
+        c = (t - sum) - y;
+        sum = t;
     }
     return sum * dv;
 }
@@ -39,4 +39,6 @@ int main()
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
     std::cout << mean(psi, pdf, delta, n);
+    delete[] psi;
+    delete[] pdf;
 }
