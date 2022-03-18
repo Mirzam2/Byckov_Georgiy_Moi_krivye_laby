@@ -18,5 +18,6 @@ int main()
         if (team[i].m >= m_crit)
             std::cout << team[i].name << " ";
     }
+    delete[] team;
     return 0;
 }

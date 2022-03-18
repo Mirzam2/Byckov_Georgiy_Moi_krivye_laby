@@ -32,7 +32,7 @@ int main()
     int T = 300;
     double right = 1000;
     double delta = (right - left) / n;
-    double *psi = 0, *pdf = 0;
+    double *psi = nullptr, *pdf = nullptr;
     psi = new double[n];
     pdf = new double[n];
     for (long long int i = 0; i < n; i++)

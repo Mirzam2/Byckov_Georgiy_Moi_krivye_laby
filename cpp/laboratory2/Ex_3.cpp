@@ -29,7 +29,7 @@ int main()
     int T = 300;
     float right = 1000;
     float delta = (right - left) / n;
-    float *psi = 0, *pdf = 0;
+    float *psi = nullptr, *pdf = nullptr;
     psi = new float[n];
     pdf = new float[n];
     for (long long int i = 0; i < n; i++)
