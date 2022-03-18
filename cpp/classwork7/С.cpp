@@ -7,7 +7,7 @@ struct Time
     Time operator+(const Time &other)
     {
         int dt = hour * 3600 + minute * 60 + second + other.hour * 3600 + other.minute * 60 + other.second;
-        if (dt > 24 * 3600)
+        if (dt >= 24 * 3600)
         {
             dt -= 24 * 3600;
         }
