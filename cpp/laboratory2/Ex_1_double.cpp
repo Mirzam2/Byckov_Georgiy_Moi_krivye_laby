@@ -15,9 +15,9 @@ double mean(double psi[], double pdf[], double const dv, unsigned size)
 }
 int main()
 {
-    unsigned n = 1000000;
+    unsigned n = 10000000;
     double left = -100000.0;
-    int T = 300;
+    double T = 0.1;
     double right = 100000.0;
     double delta = (right - left) / n;
     double *psi = nullptr, *pdf = nullptr;
@@ -26,10 +26,10 @@ int main()
     for (long long int i = 0; i < n; i++)
     {
         double x = left + i * delta;
-        psi[i] = abs(x);
+        psi[i] = fabs(x);
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
-    std::cout << std::setprecision(10) << mean(psi, pdf, delta, n);
+    std::cout << std::setprecision(10) << mean(psi, pdf, delta, n) << " " << sqrtf(T / M_PI);
     delete[] psi;
     delete[] pdf;
 }

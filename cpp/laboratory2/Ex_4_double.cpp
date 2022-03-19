@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <iomanip>
 double mean(double psi[], double pdf[], double const dv, unsigned size)
 {
     if (size == 1)
@@ -16,7 +17,7 @@ int main()
 {
     unsigned n = 1000000;
     double left = -1000;
-    int T = 300;
+    int T = 1;
     double right = 1000;
     double delta = (right - left) / n;
     double *psi = nullptr, *pdf = nullptr;
@@ -25,10 +26,10 @@ int main()
     for (long long int i = 0; i < n; i++)
     {
         double x = left + i * delta;
-        psi[i] = abs(x);
+        psi[i] = fabs(x);
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
-    std::cout << mean(psi, pdf, delta, n);
+    std::cout << std::setprecision(10) << mean(psi, pdf, delta, n) << " " << std::setprecision(10) << sqrtf(T / M_PI);
     delete[] psi;
     delete[] pdf;
 }
