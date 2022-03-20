@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <iomanip>
 float mean(float psi[], float pdf[], float const dv, unsigned size);
 void print(float *mas, int n) //вывод массива
 {
@@ -34,7 +35,7 @@ int main()
         psi[i] = fabs(x);
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
-    std::cout << mean(psi, pdf, delta, n);
+    std::cout << std::setprecision(10) << mean(psi, pdf, delta, n) << " " << std::setprecision(10) << sqrtf(T / M_PI);
     delete[] psi;
     delete[] pdf;
 }

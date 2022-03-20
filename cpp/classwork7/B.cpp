@@ -78,7 +78,8 @@ void sortic(Students *mas, int start, int end) // сортировка
 }
 int main()
 {
-    const int N = 5;
+    int N = 5;
+    std::cin >> N;
     Students *team = new Students[N];
     for (int i = 0; i < N; i++)
     {
