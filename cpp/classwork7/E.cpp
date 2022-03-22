@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector> // использую так как в обычных массивах я не знаю как сделать что бы работал конструктор, ему надо на вход данные, а как при этои их ввести??
+
 void min(int &a, int &b)
 {
 
@@ -10,21 +10,25 @@ void min(int &a, int &b)
         b = temp;
     }
 }
+
 struct Segment
 {
     int start;
     int end;
+
     Segment()
     {
         start = 0;
         end = 0;
     }
+
     Segment(int x_3, int x_4)
     {
         min(x_3, x_4);
         start = x_3;
         end = x_4;
     }
+
     bool operator==(const Segment &other) const
     {
         if ((end >= other.start) and (other.end >= end) or (start >= other.start) and (start <= other.end) or (other.start >= start) and (other.start <= end))
