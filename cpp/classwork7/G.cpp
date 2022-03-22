@@ -71,25 +71,20 @@ int main()
         std::cin >> a >> reac;
         if (strncmp(beta_1.name, reac, sizeof(a)) == 0)
         {
-            std::cout << "sosi 1" << '\n';
             temp = beta_1;
         }
         else if (strncmp(beta_2.name, reac, sizeof(a)) == 0)
         {
-            std::cout << "sosi 2" << '\n';
             temp = beta_2;
         }
         else if (strncmp(alpha.name, reac, sizeof(a)) == 0)
         {
-            std::cout << "sosi 3" << '\n';
             temp = alpha;
         }
-        std::cout << temp.name << " " << temp.mass << " " << temp.charge << '\n';
         for (int j = 0; j < n; j++)
         {
             if (strncmp(array[j].name, a, sizeof(a)) == 0)
             {
-                std::cout << "sosi 4" << '\n';
                 temp -= array[i];
                 break;
             }
