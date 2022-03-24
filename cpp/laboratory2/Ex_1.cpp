@@ -1,23 +1,26 @@
 #include <iostream>
 #include <cmath>
+
+
 float mean(float psi[], float pdf[], float const dv, unsigned size)
 {
     if (size == 1)
     {
         return psi[0] * pdf[0] * dv;
     }
-
     else
     {
-        return mean(psi, pdf, dv, size / 2) + mean(psi +size / 2, pdf + size/2, dv, size - size / 2);
+        return mean(psi, pdf, dv, size / 2) + mean(psi + size / 2, pdf + size/2, dv, size - size / 2);
     }
 }
+
+
 int main()
 {
-    unsigned n = 100000;
-    float left = -1000;
+    unsigned n = 1000;
+    float left = -100;
     int T = 300;
-    float right = 1000;
+    float right = 100;
     float delta = (right - left) / n;
     float *psi = nullptr, *pdf = nullptr;
     psi = new float[n];

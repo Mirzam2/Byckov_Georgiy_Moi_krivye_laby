@@ -38,7 +38,7 @@ int main()
     for (long long int i = 0; i < n; i++)
     {
         float x = left + i * delta;
-        psi[i] = fabs(x);
+        psi[i] = x;
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
     std::cout << mean(psi, pdf, delta, n);

@@ -16,9 +16,9 @@ double mean(double psi[], double pdf[], double const dv, unsigned size)
 int main()
 {
     unsigned n = 10000000;
-    double left = -100000.0;
+    double left = -5.0;
     double T = 0.1;
-    double right = 100000.0;
+    double right = 5.0;
     double delta = (right - left) / n;
     double *psi = nullptr, *pdf = nullptr;
     psi = new double[n];

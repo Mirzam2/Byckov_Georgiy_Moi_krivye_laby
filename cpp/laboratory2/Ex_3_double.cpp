@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-
+#include <iomanip>
 void print(double *mas, int n) //вывод массива
 {
     for (int i = 0; i < n; i++)
@@ -27,7 +27,7 @@ int main()
     unsigned n = 100000;
     double left = -1000.0;
     int T = 300;
-    double right = 10000.0;
+    double right = 1000.0;
     double delta = (right - left) / n;
     double *psi = nullptr, *pdf = nullptr;
     psi = new double[n];
@@ -38,7 +38,7 @@ int main()
         psi[i] = fabs(x);
         pdf[i] = exp(-x * x / T) / sqrt(M_PI * T);
     }
-    std::cout << mean(psi, pdf, delta, n);
+    std::cout << std::setprecision(10)<< mean(psi, pdf, delta, n);
     delete[] psi;
     delete[] pdf;
 }
