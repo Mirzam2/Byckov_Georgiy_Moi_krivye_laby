@@ -1,5 +1,10 @@
 #include <iostream>
 #include <cmath>
+
+struct Street;
+bool chec(const Street &, float &, float &);
+
+
 struct Street
 {
     float x1 = 0, y1 = 0, x2 = 0, y2 = 0, k = 0;
@@ -62,12 +67,14 @@ struct Street
         else
         {
             bool a1 = ((x1 <= x0) && (x0 <= x2) || ((x2 <= x0) && (x0 <= x1)));
+            chec(other, x0, y0);
             bool a2 = ((other.x1 <= x0) && (x0 <= other.x2) || ((other.x2 <= x0) && (x0 <= other.x1)));
             return (a1 && a2);
         }
     }
 };
-bool chec(Street &st, float &x, float &y)
+
+bool chec(const Street &st, float &x, float &y)
 {
     if ((st.x1 <= x) && (x <= st.x2) || ((st.x2 <= x) && (x <= st.x1)))
     {
@@ -76,6 +83,7 @@ bool chec(Street &st, float &x, float &y)
     else
         return false;
 }
+
 int main()
 {
     float x1 = 0, x2 = 0, y1 = 0, y2 = 0;
