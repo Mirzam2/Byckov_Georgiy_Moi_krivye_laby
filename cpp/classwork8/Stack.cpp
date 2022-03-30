@@ -32,12 +32,28 @@ struct Stack
         top->field = value;
         top->next = temp;
     }
-    void pop(){
+    void pop()
+    {
         Node *temp;
         temp = new Node;
         temp = top->next;
         delete top;
         top = temp;
+    }
+    bool is_empty()
+    {
+        if (top == nullptr)
+            return true;
+        else
+            return false;
+    }
+    Node *Top()
+    {
+        Node *temp = top;
+        while (temp->next != nullptr){
+            temp = temp->next;
+        }
+        return temp;
     }
     friend std::ostream &operator<<(std::ostream &out, Stack &st)
     {
@@ -58,7 +74,8 @@ int main()
     std::cout << stack;
     stack.push(7);
     stack.push(50);
-    stack.pop();
-    stack.pop();
+    stack.push(3);
     std::cout << stack;
+    std::cout << stack.Top()->field;
+    stack.pop();
 }
