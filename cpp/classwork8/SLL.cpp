@@ -3,9 +3,10 @@ struct Node;
 void append(Node **, int);
 void print(Node **);
 void pop(Node **);
-void delete_by_value(Node *, int);
-void delete_by_index(Node *, int);
-
+void delete_by_value(Node **, int);
+void delete_by_index(Node **, int);
+Node *find_by_index(Node **, int);
+Node *find_by_value(Node **, int); // Find node by value of field->return pointer to node, else -- nullptr
 struct Node
 {
     int field;
@@ -86,7 +87,7 @@ void delete_list(Node **head_ptr)
 void delete_by_value(Node **head_ptr, int value)
 {
     Node *current = *head_ptr;
-    if (current->field = value)
+    if (current->field == value)
     {
         *head_ptr = current->next;
         delete current;
@@ -129,6 +130,47 @@ void delete_by_index(Node **head_ptr, int index)
         delete current;
     }
 }
+Node *find_by_value(Node **head_ptr, int value)
+{
+    Node *current = *head_ptr;
+    if (current->field == value)
+    {
+        return current;
+    }
+    else
+    {
+        Node *prev = nullptr;
+        while (current->next != nullptr)
+        {
+            prev = current;
+            current = current->next;
+            if (current->field == value)
+            {
+                return current;
+                break;
+            }
+        }
+        return nullptr;
+    }
+}
+Node *find_by_index(Node **head_ptr, int index)
+{
+    Node *current = *head_ptr;
+    if (index == 0)
+    {
+        return current;
+    }
+    else
+    {
+        int i = 0;
+        while ((current->next != nullptr) && (i < index))
+        {
+            current = current->next;
+            i++;
+        }
+        return current;
+    }
+}
 int main()
 {
     Node *head;
@@ -137,14 +179,26 @@ int main()
     append(&head, 6);
     print_list(&head);
     append(&head, 7);
+    append(&head, 10);
     print_list(&head);
     add(&head, 9, 1);
     print_list(&head);
-    // pop(&head);
+    pop(&head);
     print_list(&head);
     delete_by_index(&head, 0);
     print_list(&head);
-    delete_list(&head);
+    std::cout << '\n';
+    Node *temp;
+    temp = new Node;
+    temp = find_by_value(&head, 7);
+    print_list(&temp);
     print_list(&head);
+    print_list(&head);
+    temp = new Node;
+    temp = find_by_index(&head, 1);
+    print_list(&temp);
+    print_list(&head);
+    delete_list(&head);
+    delete temp;
     return 0;
 }
