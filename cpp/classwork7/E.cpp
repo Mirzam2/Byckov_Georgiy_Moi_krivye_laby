@@ -76,5 +76,6 @@ int main()
         std::cout << "NO"
                   << "\n";
     }
+    delete[] array;
     return 0;
 }

@@ -107,5 +107,6 @@ int main()
     }
     for (int i = 0; i < m; i++)
         std::cout << cout[i] << '\n';
+    delete[] array;
     return 0;
 }
