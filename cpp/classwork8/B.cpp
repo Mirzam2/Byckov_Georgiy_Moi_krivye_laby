@@ -8,6 +8,7 @@ void delete_by_value(Node **, int);
 void delete_by_index(Node **, int);
 Node *find_by_index(Node **, int);
 Node *find_by_value(Node **, int); // Find node by value of field->return pointer to node, else -- nullptr
+int find_loop(Node **);
 struct Node
 {
     int field;
@@ -172,34 +173,40 @@ Node *find_by_index(Node **head_ptr, int index)
         return current;
     }
 }
+int find_loop(Node **head_ptr)
+{
+    Node *item = *head_ptr;
+    int i = 0;
+    bool flag = true;
+    while (item != nullptr and flag)
+    {
+        Node *temp = item;
+        while (temp != nullptr and flag)
+        {
+            if (temp)
+            temp = temp->next;
+        }
+        item = item->next;
+        i++;
+    }
+    if (flag)
+        return -1;
+    else
+        return i - 1;
+}
 int main()
 {
     Node *head;
     head = new Node;
     head = nullptr;
-    append(&head, 6);
-    print_list(&head);
+    append(&head, 5);
     append(&head, 7);
+    append(&head, 8);
+    append(&head, 9);
     append(&head, 10);
-    print_list(&head);
-    add(&head, 9, 1);
-    print_list(&head);
-    pop(&head);
-    print_list(&head);
-    delete_by_index(&head, 0);
-    print_list(&head);
-    std::cout << '\n';
-    Node *temp;
-    temp = new Node;
-    temp = find_by_value(&head, 7);
-    print_list(&temp);
-    print_list(&head);
-    print_list(&head);
-    temp = new Node;
-    temp = find_by_index(&head, 1);
-    print_list(&temp);
-    print_list(&head);
-    delete_list(&head);
-    delete temp;
+    append(&head, 11);
+    head->next->next = head->next;
+    std::cout << find_loop(&head);
+
     return 0;
 }
