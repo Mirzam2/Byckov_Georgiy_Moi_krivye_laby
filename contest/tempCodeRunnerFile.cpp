@@ -18,7 +18,7 @@ int main()
     std::cin >> m;
     bool global_flag = false;
     int k = 0;
-    for (int i = 0; i < 30 - m; i++)
+    for (int i = 0; i < 30; i++)
     {
         bool flag = true;
         for (int j = 0; j < m; j++)
@@ -44,5 +44,4 @@ int main()
     {
         std::cout << -1;
     }
-    return 0;
 }
