@@ -18,13 +18,19 @@ int *compress(int **matrix, int n, int m)
                 *temp = matrix[i][j];
                 temp++;
             }
-            if (s >3){
-                delete[] matrix;
+            if (s > 3)
+            {
+                for(int i_1 = n - 1; 0 <= i_1; i_1--)
+                    delete[] matrix[i_1];
+                    delete matrix[i_1];
+                delete temp;
                 return nullptr;
             }
         }
     }
-    delete[] matrix;
+    for(int i_1 = n - 1; 0 <= i_1; i_1--)
+                    delete[] matrix[i_1];
+    delete temp;
     return ptr;
 };
 // Здесь ваша реализация функции.

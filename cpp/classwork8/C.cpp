@@ -1,14 +1,14 @@
 #include <iostream>
 struct Node;
 void append(Node **, int);
-void prin_list(Node **);
+void print(Node **);
 void pop(Node **);
 void delete_list(Node **);
 void delete_by_value(Node **, int);
 void delete_by_index(Node **, int);
+void reverse(Node **);
 Node *find_by_index(Node **, int);
-Node *find_by_value(Node **, int); // Find node by value of field->return pointer to node, else -- nullptr
-int find_loop(Node **);
+Node *find_by_value(Node **, int);
 struct Node
 {
     int field;
@@ -132,6 +132,19 @@ void delete_by_index(Node **head_ptr, int index)
         delete current;
     }
 }
+void reverse(Node **head_ptr)
+{
+    Node *temp = nullptr, *y = *head_ptr, *r = nullptr;
+
+    while (y != nullptr)
+    {
+        temp = y->next;
+        y->next = r;
+        r = y;
+        y = temp;
+    }
+    *head_ptr = r;
+}
 Node *find_by_value(Node **head_ptr, int value)
 {
     Node *current = *head_ptr;
@@ -173,35 +186,8 @@ Node *find_by_index(Node **head_ptr, int index)
         return current;
     }
 }
-int find_loop(Node **head_ptr)
-{
-  Node *slow = *head_ptr;
-  Node *fast = *head_ptr;
-
-  while (fast != nullptr && fast->next != nullptr) {
-    slow = slow->next;
-    fast = fast->next->next;
-    if (slow == fast) {
-      break;
-    }
-  }
-
-  if (fast == nullptr || fast->next == nullptr) {
-    return -1;
-  }
-    slow = *head_ptr;
-    int i = 0;
-    while (slow != fast) {
-      slow = slow->next;
-      fast = fast->next;
-      i++;
-    }
-    return i;
-}
-
 int main()
-{
-    Node *head;
+{    Node *head;
     head = new Node;
     head = nullptr;
     append(&head, 5);
@@ -211,8 +197,8 @@ int main()
     append(&head, 10);
     append(&head, 11);
     print_list(&head);
-    head->next->next->next->next = head->next->next;
-    std::cout << find_loop(&head);
+    reverse(&head);
+    print_list(&head);
     delete_list(&head);
     delete head;
     return 0;

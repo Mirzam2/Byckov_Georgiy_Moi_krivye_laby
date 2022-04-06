@@ -1,19 +1,19 @@
 #include <iostream>
-using namespace std;
 
 int main()
 {
-	long long n;
-	cin >> n;
-	long long green = 0;
-	long long div = 2;
+    long long int num;
+    long long int g = 0;
+    long long int parit = 2;
+    std::cin >> num;
     int i = 0;
-	while (i < 62){
-		green += ((n / div) - (n / (2 * div))) * (i + 1);
-		div *= 2;
+    while (i < 62)
+    {
+        g += ((num / parit) - (num / (2 * parit))) * (i + 1);
+        parit = parit * 2;
         i++;
-	}
-	cout << green << endl;
+    }
+    std::cout << g << '\n';
 
-	return 0;
+    return 0;
 }
