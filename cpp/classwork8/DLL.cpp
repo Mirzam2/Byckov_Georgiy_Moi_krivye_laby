@@ -149,15 +149,18 @@ struct List
             current = current->next;
             i++;
         }
+        if (i != index) //проверка что бы он его нашёл
+            return nullptr;
         if (index == 0)
         {
-            if (head == tail)
+            if (head == tail) //если список из одного элемента
             {
                 head = nullptr;
                 tail = nullptr;
             }
             else
             {
+                //коль в начале будет
                 head = head->next;
                 head->prev = nullptr;
             }
@@ -165,12 +168,13 @@ struct List
         }
         else
         {
-            if (current == tail)
+            if (current == tail) // коль в конце
             {
                 tail = tail->prev;
                 tail->next = nullptr;
                 return current;
             }
+            //коль все норм
             current->prev->next = current->next;
             current->next->prev = current->prev;
             return current;
