@@ -107,14 +107,81 @@ struct List
         tail = nullptr;
         head = nullptr;
     };
-    Node *find_by_value(int value);
-    Node *find_by_index(int index);
-    Node *delete_by_value(int value); // ->return pointer to node, else -- nullptr
-    Node *delete_by_index(int index); // ->return pointer to node, else -- nullptr
-    int size()
+    Node *find_by_value(int value)
     {
         Node *current = head;
+        while (current != tail)
+        {
+            if (current->field == value)
+            {
+                return current;
+            }
+            current = current->next;
+        }
+        return nullptr;
+    }
+    Node *find_by_index(int index)
+    {
+        Node *current = head;
+        if (index == 0)
+        {
+            return current;
+        }
+        else
+        {
+            int i = 0;
+            while ((current != tail) && (i < index))
+            {
+                current = current->next;
+                i++;
+            }
+            return current;
+        }
+    }
+    Node *delete_by_value(int value); // ->return pointer to node, else -- nullptr
+    Node *delete_by_index(int index)  // ->return pointer to node, else -- nullptr
+    {
+        Node *current = head;
+
         int i = 0;
+        while ((current != tail) && (i < index))
+        {
+            current = current->next;
+            i++;
+        }
+        if (index == 0)
+        {
+            if (head == tail)
+            {
+                head = nullptr;
+                tail = nullptr;
+            }
+            else
+            {
+                head = head->next;
+                head->prev = nullptr;
+            }
+            return current;
+        }
+        else
+        {
+            if (current == tail)
+            {
+                tail = tail->prev;
+                tail->next = nullptr;
+                return current;
+            }
+            current->prev->next = current->next;
+            current->next->prev = current->prev;
+            return current;
+        }
+    }
+    int size()
+    {
+        if (head == nullptr)
+            return 0;
+        Node *current = head;
+        int i = 1;
         while (current != tail)
         {
             i++;
@@ -127,11 +194,14 @@ int main()
 {
     List massiv;
     massiv.append(10);
-    massiv.pop();
     massiv.append(11);
     massiv.append(12);
     massiv.print_list();
-    massiv.add(4, 0);
+    std::cout << massiv.find_by_value(1) << '\n';
+    std::cout << massiv.find_by_value(10)->field << '\n';
+    std::cout << massiv.size();
+    massiv.print_list();
+    massiv.add(4, 2);
     massiv.pop();
     massiv.print_list();
 
