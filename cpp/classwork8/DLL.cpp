@@ -138,8 +138,47 @@ struct List
             return current;
         }
     }
-    Node *delete_by_value(int value); // ->return pointer to node, else -- nullptr
-    Node *delete_by_index(int index)  // ->return pointer to node, else -- nullptr
+    Node *delete_by_value(int value)
+    {
+        Node *current = head;
+
+        while ((current != tail) && (current->field != value))
+        {
+            current = current->next;
+        }
+        if (current->field != value) //проверка что бы он его нашёл
+            return nullptr;
+        if (current == head)
+        {
+            if (head == tail) //если список из одного элемента
+            {
+                head = nullptr;
+                tail = nullptr;
+            }
+            else
+            {
+                //коль в начале будет
+                head = head->next;
+                head->prev = nullptr;
+            }
+            return current;
+        }
+        else
+        {
+            if (current == tail) // коль в конце
+            {
+                tail = tail->prev;
+                tail->next = nullptr;
+                return current;
+            }
+            //коль все норм
+            current->prev->next = current->next;
+            current->next->prev = current->prev;
+            return current;
+        }
+
+    }                                // ->return pointer to node, else -- nullptr
+    Node *delete_by_index(int index) // ->return pointer to node, else -- nullptr
     {
         Node *current = head;
 
