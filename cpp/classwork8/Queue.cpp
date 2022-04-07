@@ -98,10 +98,10 @@ struct Queue
         }
         return i;
     }
-    bool is_emply(){
+    bool is_emply()
+    {
         return (head == nullptr);
     }
-
 };
 int main()
 {
