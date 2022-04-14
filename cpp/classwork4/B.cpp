@@ -3,8 +3,7 @@ int main()
 {
     int n = 0;
     std::cin >> n;
-    const int N = n;
-    int mas[N] = {0};
+    int *mas = new int[n];
     for (int i = 0; i < n; i++)
     {
         std::cin >> mas[i];
@@ -19,5 +18,6 @@ int main()
     {
         std::cout << *teg << " ";
     }
+    delete[] mas;
     return 0;
 }
