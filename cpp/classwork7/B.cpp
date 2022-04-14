@@ -3,7 +3,7 @@ struct Students
 {
     char name[20];
     int m = 0;
-    bool operator<(const Students &other) const
+    bool operator<(const Students &other)
     {
         if (m < other.m) //сравнение по баллу
         {
