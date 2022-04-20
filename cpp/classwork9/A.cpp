@@ -87,16 +87,16 @@ int main()
     {
         std::cout << timetable[i];
     }*/
-    int s = 0;    // счетчик пар
-    int time = 0; // время окончания последней уже взятой пары
+    int mogno = 0;       // счетчик пар
+    int i_propystit = 0; // время окончания последней уже взятой пары
     for (int i = 0; i < n; i++)
     {
-        if (timetable[i].start >= time)
+        if (timetable[i].start >= i_propystit)
         {
-            time = timetable[i].end;
-            s++;
+            i_propystit = timetable[i].end;
+            mogno++;
         }
     }
-    std::cout << s;
+    std::cout << mogno;
     delete[] timetable;
 }
