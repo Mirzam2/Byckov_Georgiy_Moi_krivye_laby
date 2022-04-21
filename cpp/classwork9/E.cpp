@@ -51,6 +51,14 @@ struct Matrix
             }
         return s;
     }
+    void delete_matrix(){
+        for (int i = 0; i < n; i++)
+            {
+                delete[] mat[i];
+            }
+            delete[] mat;
+
+    }
 };
 void convert(Matrix old, Matrix extra){
     int s = 0;
@@ -76,5 +84,7 @@ int main()
     Matrix extra(m, n);
     convert(old,extra);
     extra.print();
+    old.delete_matrix();
+    extra.delete_matrix();
     return 0;
 }
