@@ -1,4 +1,6 @@
 #include <iostream>
+struct Matrix;
+void convert(Matrix old, Matrix extra);
 struct Matrix
 {
     int n = 0; // количество строк
@@ -58,7 +60,7 @@ void convert(Matrix old, Matrix extra){
                 extra.mat[i][s] = old.mat[i][j];
                 extra.mat[j][s] = old.mat[i][j];
                 s++;
-                extra.print();
+                //extra.print();
             }
         }
 
