@@ -21,4 +21,5 @@ int main()
     //std::cout << mas[0] << " " << mas[1] << " " << mas[2] << '\n';
     std::cout << mas[(n - 1) % 3];
     delete[] price;
+    return 0;
 }
