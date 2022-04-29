@@ -27,6 +27,24 @@ void pre_order(Node *n)
         pre_order(n->right);
     }
 }
+void in_order(Node *n)
+{
+    if (n != nullptr)
+    {
+        in_order(n->left);
+        std::cout << n->value << ' ';
+        in_order(n->right);
+    }
+}
+void post_order(Node *n)
+{
+    if (n != nullptr)
+    {
+        post_order(n->left);
+        post_order(n->right);
+        std::cout << n->value << ' ';
+    }
+}
 void add(Node **root1, int value)
 {
     Node *&root = *root1;
@@ -105,24 +123,7 @@ Node *find(Node *root, int value)
     else
         return nullptr;
 }
-void in_order(Node *n)
-{
-    if (n != nullptr)
-    {
-        in_order(n->left);
-        std::cout << n->value << ' ';
-        in_order(n->right);
-    }
-}
-void post_order(Node *n)
-{
-    if (n != nullptr)
-    {
-        post_order(n->left);
-        post_order(n->right);
-        std::cout << n->value << ' ';
-    }
-}
+
 int main()
 {
     Node *tree = nullptr;
