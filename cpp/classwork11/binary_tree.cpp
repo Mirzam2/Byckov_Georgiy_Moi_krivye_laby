@@ -90,6 +90,45 @@ void add(Node **root1, int value)
         }
     }
 }
+void remove(Node *root, int value)
+{
+    Node *target = find(root, value);
+    if (target == nullptr)
+        return;
+    if (target->left == nullptr && target->right == nullptr)
+    {
+        if (target->parent != nullptr)
+        {
+            if (target->parent->left == target)
+                target->parent->left = nullptr;
+            else
+                target->parent->right = nullptr;
+        }
+        delete target;
+    }
+    else if (target->left == nullptr)
+    {
+        Node *kind = target->right;
+        target->right = kind->right;
+        target->left = kind->left;
+        target->value = kind->value;
+        delete kind;
+    }
+    else if (target->right == nullptr)
+    {
+        Node *kind = target->left;
+        target->right = kind->right;
+        target->left = kind->left;
+        target->value = kind->value;
+        delete kind;
+    }
+    else
+    {
+        Node *leaf = min(target->right); //находим самый левый элемент из правого дерева
+        target->value = leaf->value;
+        remove(target->right, leaf->value);
+    }
+}
 Node *min(Node *root)
 {
     if (root->left != nullptr)
@@ -131,6 +170,9 @@ int main()
     add(&tree, 7);
     add(&tree, 4);
     add(&tree, 6);
+    add(&tree, 10);
+    add(&tree, 11);
+    add(&tree, 9);
     // std::cout << tree->value;
     std::cout << "Tree pre_order: ";
     pre_order(tree);
@@ -145,5 +187,9 @@ int main()
     std::cout << "max " << max(tree)->value << '\n';
     std::cout << "find 5: " << find(tree, 5)->value << '\n';
     std::cout << "find -1: " << find(tree, -1) << '\n';
+    remove(tree, 10);
+    std::cout << "Tree in_order: ";
+    in_order(tree);
+    std::cout << '\n';
     return 0;
 }
