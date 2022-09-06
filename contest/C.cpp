@@ -9,28 +9,32 @@ int *compress(int **matrix, int n, int m)
     int *temp = &ptr[0];
     for (int i = 0; i < n; i++)
     {
+        int s = 0;
         for (int j = 0; j < m; j++)
         {
-            int s = 0;
             if (matrix[i][j] != 0)
             {
                 s++;
                 *temp = matrix[i][j];
                 temp++;
             }
-            if (s > 3)
+        }
+        if (s != 3)
+        {
+            for (int i = 0; i < n; i++)
             {
-                for(int i_1 = n - 1; 0 <= i_1; i_1--)
-                    delete[] matrix[i_1];
-                    delete matrix[i_1];
-                delete temp;
-                return nullptr;
+                delete[] matrix[i];
             }
+            delete[] matrix;
+            delete[] ptr;
+            return nullptr;
         }
     }
-    for(int i_1 = n - 1; 0 <= i_1; i_1--)
-                    delete[] matrix[i_1];
-    delete temp;
+    for (int i = 0; i < n; i++)
+    {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
     return ptr;
 };
 // Здесь ваша реализация функции.
