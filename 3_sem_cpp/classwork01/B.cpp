@@ -48,4 +48,6 @@ int main()
     massive[2] = 1;
     std::cout << min(massive, 3, sizeof(int), comp_int) << "\n";
         std::cout << max(massive, 3, sizeof(int), comp_int);
+    delete[] massive;
+    return 0;
 }
