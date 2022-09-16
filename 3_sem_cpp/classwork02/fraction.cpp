@@ -110,7 +110,7 @@ private:
     int denominator;
     int NOD()
     {
-        int a = numerator, b = denominator;
+        int a = abs(numerator), b = abs(denominator);
         while (a != 0 and b != 0)
         {
             if (a > b)
