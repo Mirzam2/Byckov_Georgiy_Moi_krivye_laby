@@ -35,6 +35,11 @@ public:
         int temp = NOD();
         denominator = denominator / temp;
         numerator = numerator / temp;
+        if (denominator < 0 and numerator < 0)
+        {
+            denominator *= -1;
+            numerator *= -1;
+        }
     }
     void multByNumber(int value)
     { // Умножить дробь на число
