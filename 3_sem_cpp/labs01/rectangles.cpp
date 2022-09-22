@@ -85,7 +85,6 @@ Rectangle get_Rectangle(int &i, std::string s)
     while (s[i] != ',')
     {
         x = 10 * x + int(s[i] - '0');
-        std::cout << "one char x   " << int(s[i] - '0') << "   " << s[i] << '\n';
         i++;
     }
     ++i;
@@ -93,12 +92,9 @@ Rectangle get_Rectangle(int &i, std::string s)
     while (s[i] != ')')
     {
         y = 10 * y + int(s[i] - '0');
-        std::cout << "one char y   " << int(s[i] - '0') << '\n';
         i++;
     }
     Rectangle result(Point(x, y));
-    std::cout << "print get_Rectangle: ";
-    result.print();
     return result;
 }
 Rectangle calk(std::string s)
@@ -112,7 +108,6 @@ Rectangle calk(std::string s)
         if (c == '(')
             number++;
     }
-    std::cout << "number: " << number << " mult: " << number_mult << '\n';
     Rectangle *massiv = new Rectangle[number - number_mult];
     int i = 0;
     int i_sum = 0;
@@ -123,8 +118,6 @@ Rectangle calk(std::string s)
         {
             Rectangle temp = get_Rectangle(i, s);
             a += temp;
-            std::cout << "a1: ";
-            a.print();
         }
         if (not(++i == s.length()))
         {
@@ -138,26 +131,19 @@ Rectangle calk(std::string s)
             }
         }
         ++i;
-        std::cout << "i " << i << " s[i] " << s[i] << '\n';
         massiv[i_sum] = a;
         ++i_sum;
     }
     Rectangle result;
-    std::cout << "\n result: \n";
     for (i = 0; i < number - number_mult; ++i)
     {
         result += massiv[i];
-        massiv[i].print();
+        //massiv[i].print();
     }
     return result;
 }
 int main()
 {
-    Rectangle a(Point(1, 5));
-    Rectangle b(Point(2, 3));
-    a += b;
-    a.print();
-    (a + b).print();
     std ::string expression;
     std ::getline(std ::cin, expression);
     std::string temp;
@@ -165,8 +151,7 @@ int main()
         if (c != ' ')
             temp += c;
     expression = temp;
-    std::cout << expression << '\n';
-    a = calk(expression);
+    Rectangle a = calk(expression);
     a.print();
     return 0;
 }
