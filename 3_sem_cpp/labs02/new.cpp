@@ -2,6 +2,7 @@
 #include <set>
 #include <random>
 
+int Max_Size = 1000;
 class SetState
 {
 protected:
@@ -18,8 +19,59 @@ public:
     {
         return state.count(s) > 0;
     }
-    SetState operator+= (const SetState &rha){
-        
+    SetState operator+=(const SetState &rha)
+    {
+        for (std::set<int>::iterator i = rha.state.begin(); i != rha.state.end(); ++i)
+        {
+            for (std::set<int>::iterator j = state.begin(); j != state.end(); ++j)
+            {
+                if (*i == *j)
+                {
+                    state.emplace(*i);
+                }
+            }
+        }
+        return *this;
+    }
+    SetState operator+(const SetState &rha) const
+    {
+        SetState result(state);
+        result += rha;
+        return result;
+    }
+    SetState operator*=(const SetState &rha)
+    {
+        for (std::set<int>::iterator i = rha.state.begin(); i != rha.state.end(); ++i)
+        {
+            for (std::set<int>::iterator j = state.begin(); j != state.end(); ++j)
+            {
+                if (*i == *j)
+                {
+                    state.emplace(*i);
+                }
+            }
+        }
+        return *this;
+    }
+    SetState operator*(const SetState &rha) const
+    {
+        SetState result(state);
+        result *= rha;
+        return result;
+    }
+    SetState operator!() const
+    {
+        SetState Res;
+
+        for (int i = -Max_Size; i <= Max_Size; ++i)
+        {
+            if (this->state.count(i) == 0)
+            {
+                Res.state.emplace(i);
+            }
+        }
+
+        return Res;
     }
 };
 
