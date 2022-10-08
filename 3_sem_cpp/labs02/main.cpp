@@ -24,13 +24,7 @@ public:
     {
         for (std::set<int>::iterator i = rha.state.begin(); i != rha.state.end(); ++i)
         {
-            for (std::set<int>::iterator j = state.begin(); j != state.end(); ++j)
-            {
-                if (*i == *j)
-                {
-                    state.emplace(*i);
-                }
-            }
+            state.emplace(*i);
         }
         return *this;
     }
@@ -128,28 +122,30 @@ int main(int argc, const char *argv[])
     SetState ss({1, 3, 5, 7, 23, 48, 57, 60, 90, 99});
     std::ofstream file("results.json"); // Открываем файл для записи
     file << "[" << '\n';
-    for (int N = 100; N <= 1000; ++N)
+    for (int N = 100; N <= 10000; ++N)
     {
-        //std::default_random_engine rng(time_t());
-        //std::uniform_int_distribution<int> dstr(0, 2000000);
+        int seed = time_t();
+        // std::default_random_engine rng(time_t());
+        // std::uniform_int_distribution<int> dstr(0, 2000000);
         float result = 0.0;
-        for (int i = 0; i < 1000; ++i)
+        for (int i = 0; i < 100; ++i)
         {
-            ProbabilityTest pt(time_t(), 0, 100, N);
-            result +=pt(ss) / N;
+            ProbabilityTest pt(result, 0, 100, N);
+            result += pt(ss) / 100;
+            seed+=10;
         }
         file << result;
-        if (N != 1000)
+        if (N != 10000)
         {
             file << ", ";
         }
-        //std::cout << result << '\n';
+        // std::cout << result << '\n';
     }
     file << "]";
     file.close();
-    ProbabilityTest pt(10, 0, 100, 100000);
-    std::cout << pt(d) << std::endl;
-    std::cout << pt(s) << std::endl;
-    std::cout << pt(ss) << std::endl;
+    // ProbabilityTest pt(10, 0, 100, 100000);
+    // std::cout << pt(d) << std::endl;
+    // std::cout << pt(s) << std::endl;
+    // std::cout << pt(ss) << std::endl;
     return 0;
 }
