@@ -46,11 +46,11 @@ public:
         delete[] matrix;
     }
 
-    void print_matrix()
+    void print_matrix() const
     {
-        for (int i = 0; i < N; i++)
+        for (size_t i = 0; i < N; i++)
         {
-            for (int j = 0; j < M; j++)
+            for (size_t j = 0; j < M; j++)
             {
                 std::cout << matrix[i][j] << " ";
             }
@@ -60,12 +60,12 @@ public:
 
     Matrix<Field, M, N> operator+=(const Matrix<Field, M, N> &rha)
     {
-        for (int i = 0; i < N; i++)
+        for (size_t i = 0; i < N; i++)
         {
-            for (int j = 0; j < M; j++)
+            for (size_t j = 0; j < M; j++)
             {
                 matrix[i][j] += rha.matrix[i][j];
-                std::cout << matrix[i][j] << " " << rha.matrix[i][j] << '\n';
+                //std::cout << matrix[i][j] << " " << rha.matrix[i][j] << '\n';
             }
         }
         return *this;
@@ -74,11 +74,12 @@ public:
     {
         Matrix<Field, M, N> result;
         result = *this;
-        std::cout << "\ntest1\n";
+        std::cout << "\ntest1\t result\n";
         result.print_matrix();
         result += rha;
-        //rha.print_matrix();
-        std::cout << "\ntest2\n";
+        std::cout << "\nrha\n";
+        rha.print_matrix();
+        std::cout << "\ntest2\t result\n";
         result.print_matrix();
         return result;
     }
@@ -140,7 +141,7 @@ int main()
     int *arr = new int[12];
     for (int i = 0; i < 12; i++)
     {
-        arr[i] = i;
+        arr[i] = -i;
     }
     Matrix<int, 4, 3> matr(arr);
     Matrix<int, 4, 3> matr2(arr);
