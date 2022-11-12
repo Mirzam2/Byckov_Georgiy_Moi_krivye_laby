@@ -9,12 +9,6 @@ class Grid final
 public:
     using value_type = T;
     using size_type = unsigned;
-
-private:
-    T *data;
-    size_type y_size, x_size;
-
-public:
     Grid(T *data, size_type y_size, size_type x_size) : data(data), y_size(y_size), x_size(x_size) {}
 
     Grid(T const &t) : data(new T[1]), x_size(1), y_size(1)
@@ -28,9 +22,9 @@ public:
 
     Grid(size_type y_size, size_type x_size, T const &t) : data(new T[y_size * x_size]), y_size(y_size), x_size(x_size)
     {
-        for (unsigned i = 0; i < y_size * x_size; i++)
+        for (unsigned i = 0; i < y_size * x_size; ++i)
         {
-            *(data + i) = t;
+            data[i] = t;
         }
     }
 
@@ -46,14 +40,14 @@ public:
 
     Grid<T> &operator=(T const &t)
     {
-        for (auto it = data, end = data + x_size * y_size; it != end; ++it)
+        for (auto it = data; it != data + x_size * y_size; ++it)
             *it = t;
         return *this;
     }
 
-    size_type get_y_size() const {return y_size;}
+    size_type get_y_size() const { return y_size; }
 
-    size_type get_x_size() const {return x_size;}
+    size_type get_x_size() const { return x_size; }
 
     T *operator[](size_type y_idx)
     {
@@ -62,7 +56,7 @@ public:
 
     void print()
     {
-        for (unsigned i = 0; i < x_size * y_size; i++)
+        for (unsigned i = 0; i < x_size * y_size; ++i)
         {
             std::cout << *(data + i) << "    ";
         }
@@ -72,7 +66,7 @@ public:
     {
         y_size = x.y_size;
         x_size = x.x_size;
-        for (unsigned i = 0; i < y_size * x_size; i++)
+        for (unsigned i = 0; i < y_size * x_size; ++i)
         {
             *(data + i) = *(x.data + i);
         }
@@ -93,7 +87,7 @@ public:
         y_size = x.y_size;
         x_size = x.x_size;
         data = new T[y_size * x_size];
-        for (unsigned i = 0; i < y_size * x_size; i++)
+        for (unsigned i = 0; i < y_size * x_size; ++i)
         {
             *(data + i) = *(x.data + i);
         }
@@ -120,6 +114,10 @@ public:
     {
         delete[] data;
     }
+
+private:
+    T *data;
+    size_type y_size, x_size;
 };
 
 int main()
@@ -141,5 +139,7 @@ int main()
     for (gsize_t y_idx = 0; y_idx != g.get_y_size(); ++y_idx)
         for (gsize_t x_idx = 0; x_idx != g.get_x_size(); ++x_idx)
             assert(1.0f == g(y_idx, x_idx));
+
+    g.print();
     return 0;
 }

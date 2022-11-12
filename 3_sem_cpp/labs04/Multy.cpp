@@ -24,7 +24,7 @@ public:
 
     MultipliGrid() : len(0)
     {
-        for (size_t i = 0; i < N; i++)
+        for (size_t i = 0; i < N; ++i)
         {
             spaces[i] = 0;
         }
@@ -33,13 +33,13 @@ public:
     MultipliGrid(T *point, size_type arr[])
     {
         len = 1;
-        for (size_t i = 0; i < N; i++)
+        for (size_t i = 0; i < N; ++i)
         {
             spaces[i] = arr[i];
             len = len * arr[i];
         }
         data = new T[len];
-        for (long i = 0; i < len; i++)
+        for (long i = 0; i < len; ++i)
         {
             *(data + i) = *(point + i);
         }
@@ -77,7 +77,7 @@ public:
     template <typename First, typename... Args>
     T foo(int i, T *point, First first, Args... args) const
     {
-        long long mass = 1;
+        size_type mass = 1;
         for (size_type j = 1 + i; j < N; j++)
         {
             mass = mass * spaces[j];
@@ -110,7 +110,7 @@ public:
 
     void print()
     {
-        for (long i = 0; i < len; i++)
+        for (long i = 0; i < len; ++i)
         {
             std::cout << *(data + i) << "    ";
         }
