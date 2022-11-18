@@ -47,22 +47,49 @@ public:
             std::cout << i << ": " << buffer[i] << " " << '\n';
         }
     }
-    // T &top(); // Безопасное получение ссылки на верхний элемент;
-    //           // Если его нет, то исключение
+    T &top()
+    {
+        if (is_empty())
+        {
+            throw std::length_error("Empty vector, you cannot top");
+        }
+        return buffer[size - 1];
+    }
+    void pop()
+    {
+        if (is_empty())
+        {
+            throw std::length_error("Emply vector, tou cannot pop");
+        }
+        size -= 1;
+    }
+    bool is_empty() const
+    {
+        return (size == 0);
+    }
+    size_t capacity() const
+    {
+        return size_memory;
+    }
 
-    // void pop(); // Безопасное извлечение (удаление) верхнего элемента;
-    //             // Если его нет, то исключение
+    T &at(size_t index)
+    {
+        if (index >= size or index < 0)
+        {
+            //throw std::out_of_range();
+        }
+        return buffer[index];
+    }
 
-    // void is_empty() const;
+    const T &operator[](size_t index)
+    {
+        return buffer[index];
+    }
+    ~Vector()
+    {
+        delete[] buffer;
+    };
 
-    // void capacity() const;
-
-    // T &at(size_t index); // Безопасное получение ссылки на i-ый элемент;
-    //                      // Если его нет, то исключение
-
-    // T &operator[](size_t index); // Получение ссылки на i-ый элемент
-
-    // const T &operator[](size_t index) const; // Получение const ссылки на i-ый элемент
 private:
     size_t size = 0;
     size_t size_memory = 1;
@@ -77,11 +104,8 @@ private:
             buffer[i] = temp_buffer[i];
         }
         delete[] temp_buffer;
-        delete temp_buffer;
         std::cout << "Memory added\n";
     }
-
-    // ~Vector();
 };
 int main()
 {
@@ -94,6 +118,8 @@ int main()
     vec.push_back(5);
     vec.push_back(5);
     vec.print();
-
+    vec.pop();
+    vec.print();
+    std::cout << vec.at(2);
     return 0;
 }
