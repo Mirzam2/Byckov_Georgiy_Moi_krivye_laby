@@ -113,6 +113,7 @@ public:
     ~Grid()
     {
         delete[] data;
+        data = nullptr;
     }
 
 private:
